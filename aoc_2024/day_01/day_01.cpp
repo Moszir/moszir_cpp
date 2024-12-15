@@ -1,7 +1,6 @@
 #include "moszir/vector.hpp"
 
 #include <iostream>
-#include <unordered_map>
 
 
 int main()
@@ -26,11 +25,9 @@ int main()
     std::cout << "Part 1: " << part1 << '\n'; // 1'258'579
 
     // Solve part 2
-    const auto leftCounts = left.countMap();
     const auto rightCounts = right.countMap();
-
     size_t part2 = 0;
-    for (const auto& [value, count] : leftCounts)
+    for (const auto& [value, count] : left.countMap())
     {
         part2 += value * count * rightCounts.get(value, 0);
     }
