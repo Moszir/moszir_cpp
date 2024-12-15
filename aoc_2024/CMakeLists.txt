@@ -1,2 +1,7 @@
-add_executable(aoc_2024_01 day_01/day_01.cpp)
-target_link_libraries(aoc_2024_01 PRIVATE moszir)
+function(add_day number)
+    add_executable(aoc_2024_${number} day_${ARGV0}/day_${number}.cpp)
+    target_link_libraries(aoc_2024_${number} PRIVATE moszir)
+endfunction()
+
+add_day(01)
+add_day(02)
