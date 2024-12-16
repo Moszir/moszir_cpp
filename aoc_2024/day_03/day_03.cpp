@@ -13,21 +13,20 @@
 /**
  * @brief Parse the multiplication instruction at the beginning of the string_view.
  *
+ * The instruction is expected to be in the form "mul(x,y)" where x and y are 1-3 digit numbers.
+ * But we already chopped off the "mul(" part.
+ *
  * @param sw The string_view to parse.
  * @return The result of the multiplication, or -1 if the string_view does not start with a valid multiplication instruction.
  */
 int64_t parseMul(const std::string_view& sw)
 {
-    if (sw.starts_with("mul("))
-    {
-        // Matching 1-3 digits, a comma, 1-3 digits, a closing parenthesis and then anything else.
-        static const std::regex re(R"((\d{1,3}),(\d{1,3})\).*)");
+    static const std::regex re(R"((\d{1,3}),(\d{1,3})\).*)");
 
-        const std::string s(sw.substr(4, std::min(8ull, sw.size() - 4)));
-        if (std::smatch match; std::regex_match(s, match, re))
-        {
-            return std::stoll(match[1]) * std::stoll(match[2]);
-        }
+    const std::string s(sw.substr(0, std::min(8ull, sw.size())));
+    if (std::smatch match; std::regex_match(s, match, re))
+    {
+        return std::stoll(match[1]) * std::stoll(match[2]);
     }
     return -1;
 }
@@ -47,26 +46,36 @@ int main()
         instructions.clear();
         file >> instructions;
 
-        for (std::size_t i = 0; i < instructions.size(); ++i)
+        std::string_view view(instructions);
+
+        while (!view.empty())
         {
-            if (const auto mul = parseMul(instructions.substr(i)); mul != -1)
+            if (view.starts_with("mul("))
             {
-                part1 += mul;
-                if (on)
+                view.remove_prefix(std::strlen("mul("));
+                if (const auto mul = parseMul(view); mul != -1)
                 {
-                    part2 += mul;
+                    part1 += mul;
+                    if (on)
+                    {
+                        part2 += mul;
+                    }
+                    view.remove_prefix(4); // skip at least "1,1)": 4 characters
                 }
-                i += 7; // skip "mul(1,1)", 7+1 characters, but the loop will increment i by 1 too.
             }
-            else if (instructions.compare(i, std::strlen("do()"), "do()") == 0)
+            else if (view.starts_with("do()"))
             {
                 on = true;
-                i += 3; // skip "do()", 3+1 characters, but the loop will increment i by 1 too.
+                view.remove_prefix(std::strlen("do()"));
             }
-            else if (instructions.compare(i, std::strlen("don't()"), "don't()") == 0)
+            else if (view.starts_with("don't()"))
             {
                 on = false;
-                i += 6; // skip "don't()", 6+1 characters, but the loop will increment i by 1 too.
+                view.remove_prefix(std::strlen("don't()"));
+            }
+            else
+            {
+                view.remove_prefix(1);
             }
         }
     }
