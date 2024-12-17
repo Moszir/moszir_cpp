@@ -3,6 +3,7 @@
 #include "unordered_map.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <fstream>
 #include <vector>
 
@@ -15,6 +16,8 @@ class Vector : public std::vector<ValueType>
     using BaseClass = std::vector<ValueType>;
 
 public:
+
+    using BaseClass::BaseClass;
 
     Vector& sort()
     {
@@ -33,6 +36,12 @@ public:
             ++counts[value];
         }
         return counts;
+    }
+
+    bool equal(const Vector& other) const
+    {
+        return BaseClass::size() == other.size() &&
+            std::equal(BaseClass::begin(), BaseClass::end(), other.begin());
     }
 
     /**
@@ -65,6 +74,12 @@ public:
         return result;
     }
 
+    [[nodiscard]]
+    Vector slice(const int64_t beginIndex) const
+    {
+        return slice(beginIndex, BaseClass::size());
+    }
+
     /**
      * @brief Concatenates two vectors.
      *
@@ -82,9 +97,27 @@ public:
         return result;
     }
 
+    std::ostream& print(const std::string& separator = ", ", std::ostream& out = std::cout) const
+    {
+        for (auto it = BaseClass::begin(); it != BaseClass::end();)
+        {
+            out << *it;
+            if (++it != BaseClass::end())
+            {
+                out << separator;
+            }
+        }
+        return out;
+    }
+
+    std::ostream& print(const char separator = ',', std::ostream& out = std::cout) const
+    {
+        return print(std::string(1, separator), out);
+    }
+
 private:
 
-    size_t indexify(int64_t index) const
+    [[nodiscard]] size_t indexify(int64_t index) const
     {
         if (index < 0)
         {
@@ -103,6 +136,13 @@ std::ifstream& operator>> (std::ifstream& file, Vector<ValueType>& v)
     file >> value;
     v.push_back(value);
     return file;
+}
+
+template <typename ValueType>
+std::ostream& operator<< (std::ostream& out, const Vector<ValueType>& v)
+{
+    v.print(", ", out);
+    return out;
 }
 
 } // namespace moszir
