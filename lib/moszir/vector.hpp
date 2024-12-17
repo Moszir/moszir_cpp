@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <span>
 #include <vector>
 
 namespace moszir
@@ -14,6 +15,7 @@ template <typename ValueType>
 class Vector : public std::vector<ValueType>
 {
     using BaseClass = std::vector<ValueType>;
+    using SpanType = std::span<const ValueType>;
 
 public:
 
@@ -38,7 +40,13 @@ public:
         return counts;
     }
 
-    bool equal(const Vector& other) const
+    bool equals(const Vector& other) const
+    {
+        return BaseClass::size() == other.size() &&
+            std::equal(BaseClass::begin(), BaseClass::end(), other.begin());
+    }
+
+    bool equals(SpanType other) const
     {
         return BaseClass::size() == other.size() &&
             std::equal(BaseClass::begin(), BaseClass::end(), other.begin());
@@ -78,6 +86,22 @@ public:
     Vector slice(const int64_t beginIndex) const
     {
         return slice(beginIndex, BaseClass::size());
+    }
+
+    [[nodiscard]]
+    SpanType slice_view(const int64_t beginIndex, const int64_t endIndex) const
+    {
+        const auto beginIndex_ = indexify(beginIndex);
+        const auto endIndex_ = indexify(endIndex);
+        return beginIndex_ < endIndex_
+            ? SpanType{BaseClass::begin() + beginIndex_, endIndex_ - beginIndex_}
+            : SpanType{};
+    }
+
+    [[nodiscard]]
+    SpanType slice_view(const int64_t beginIndex) const
+    {
+        return slice_view(beginIndex, BaseClass::size());
     }
 
     /**

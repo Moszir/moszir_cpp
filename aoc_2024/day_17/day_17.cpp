@@ -42,7 +42,7 @@ int64_t recursiveSolve(const int64_t n, int64_t a)
     a <<= 3;
     for (int x = 0; x < 8; ++x)
     {
-        if (const auto result = solve(a + x); result.equal(program.slice(n)))
+        if (const auto result = solve(a + x); result.equals(program.slice_view(n)))
         {
             if (const auto s = recursiveSolve(n - 1, a + x); s != -1)
             {
