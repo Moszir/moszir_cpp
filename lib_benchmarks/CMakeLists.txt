@@ -1,0 +1,2 @@
+add_executable(moszir_vector_benchmarks vector_benchmarks.cpp)
+target_link_libraries(moszir_vector_benchmarks PRIVATE moszir benchmark::benchmark)

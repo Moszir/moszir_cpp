@@ -1,0 +1,3 @@
+add_executable(moszir_vector_tests vector_tests.cpp)
+target_link_libraries(moszir_vector_tests PRIVATE moszir gtest gtest_main)
+gtest_discover_tests(moszir_vector_tests PROPERTIES LABELS moszir)
