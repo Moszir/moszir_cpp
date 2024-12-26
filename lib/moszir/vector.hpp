@@ -24,44 +24,7 @@ public:
 
     using BaseClass::BaseClass;
 
-    auto count_if(auto&& predicate) const
-    {
-        return std::ranges::count_if(BaseClass::begin(), BaseClass::end(), predicate);
-    }
-
-    template<typename ReturnType>
-    ReturnType transformReduce(
-        std::function<ReturnType(const ValueType&)> transform,
-        std::function<ReturnType(ReturnType, ReturnType)> reduce = std::plus<ReturnType>{},
-        ReturnType initialValue = ReturnType{}) const
-    {
-        ReturnType result = initialValue;
-        for (const auto& value : *this)
-        {
-            result = reduce(result, transform(value));
-        }
-        return result;
-    }
-
-    Vector& sort()
-    {
-        std::ranges::sort(
-            BaseClass::begin(),
-            BaseClass::end());
-        return *this;
-    }
-
-    [[nodiscard]]
-    UnorderedMap<ValueType, std::size_t> countMap() const
-    {
-        UnorderedMap<ValueType, std::size_t> counts;
-        for (const auto value : *this)
-        {
-            ++counts[value];
-        }
-        return counts;
-    }
-
+    #pragma region Comparison
     bool equals(const Vector& other) const
     {
         return BaseClass::size() == other.size() &&
@@ -73,6 +36,10 @@ public:
         return BaseClass::size() == other.size() &&
             std::equal(BaseClass::begin(), BaseClass::end(), other.begin());
     }
+    #pragma endregion
+
+
+    #pragma region Slicing
 
     /**
      * @brief Slices the vector.
@@ -162,6 +129,41 @@ public:
         std::copy(other.begin(), other.end(), std::back_inserter(result));
         return result;
     }
+    #pragma endregion
+
+
+    #pragma region Algorithms
+
+    auto count_if(auto&& predicate) const
+    {
+        return std::ranges::count_if(BaseClass::begin(), BaseClass::end(), predicate);
+    }
+
+    template<typename ReturnType>
+    ReturnType transformReduce(
+        std::function<ReturnType(const ValueType&)> transform,
+        std::function<ReturnType(ReturnType, ReturnType)> reduce = std::plus<ReturnType>{},
+        ReturnType initialValue = ReturnType{}) const
+    {
+        ReturnType result = initialValue;
+        for (const auto& value : *this)
+        {
+            result = reduce(result, transform(value));
+        }
+        return result;
+    }
+
+    Vector& sort()
+    {
+        std::ranges::sort(
+            BaseClass::begin(),
+            BaseClass::end());
+        return *this;
+    }
+    #pragma endregion
+
+
+    #pragma region Output
 
     std::ostream& print(const std::string& separator = ", ", std::ostream& out = std::cout) const
     {
@@ -196,10 +198,31 @@ public:
         print(separator, ss);
         return String(ss.str());
     }
+    #pragma endregion
+
+
+    [[nodiscard]]
+    UnorderedMap<ValueType, std::size_t> countMap() const
+    {
+        UnorderedMap<ValueType, std::size_t> counts;
+        for (const auto value : *this)
+        {
+            ++counts[value];
+        }
+        return counts;
+    }
 
 private:
 
-    [[nodiscard]] size_t indexify(int64_t index) const
+    /**
+     * @brief Converts a potentially negative index to a non-negative index.
+     * @param index The potentially negative index.
+     * @return The non-negative index.
+     *
+     * For example: <c>indexify(-1)</c> returns <c>size() - 1</c>.
+     */
+    [[nodiscard]]
+    size_t indexify(int64_t index) const
     {
         if (index < 0)
         {
@@ -210,6 +233,13 @@ private:
     }
 };
 
+/**
+ * @brief Reads an element from the input stream and appends it to the vector.
+ * @tparam ValueType The type of the elements in the vector.
+ * @param inStream The input stream.
+ * @param v The vector.
+ * @return The input stream.
+ */
 template <typename ValueType>
 std::istream& operator>> (std::istream& inStream, Vector<ValueType>& v)
 {
@@ -219,6 +249,13 @@ std::istream& operator>> (std::istream& inStream, Vector<ValueType>& v)
     return inStream;
 }
 
+/**
+ * @brief Writes the vector to the output stream.
+ * @tparam ValueType The type of the elements in the vector.
+ * @param out The output stream.
+ * @param v The vector.
+ * @return The output stream (so that you can chain calls).
+ */
 template <typename ValueType>
 std::ostream& operator<< (std::ostream& out, const Vector<ValueType>& v)
 {

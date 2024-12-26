@@ -1,3 +1,8 @@
-add_executable(moszir_vector_tests vector_tests.cpp)
-target_link_libraries(moszir_vector_tests PRIVATE moszir gtest gtest_main)
-gtest_discover_tests(moszir_vector_tests PROPERTIES LABELS moszir)
+function(add_moszir_gtest module submodule)
+    set(target moszir_${module}_${submodule}_tests)
+    add_executable("${target}" "${submodule}.cpp")
+    target_link_libraries("${target}" PRIVATE moszir gtest gtest_main)
+    gtest_discover_tests("${target}" PROPERTIES LABELS moszir)
+endfunction()
+
+add_subdirectory(vector)
