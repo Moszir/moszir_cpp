@@ -1,5 +1,7 @@
 #pragma once
 
+#include "moszir/string.hpp"
+
 #include <fstream>
 
 namespace moszir
@@ -17,12 +19,26 @@ public:
 
     using BaseClass::BaseClass;
 
+    String readFile()
+    {
+        return {std::istreambuf_iterator(*this), std::istreambuf_iterator<char>()};
+    }
+
     /**
      * @brief Returns whether the next character in the stream is an end of line character without consuming it.
      *
      * @return <c>true</c> if the next character is an end of line character, <c>false</c> otherwise.
      *
      * @note The function is not marked as <c>const</c> because the <c>peek</c> function is not <c>const</c>.
+     *
+     * Example usage:
+     * @code
+     * while (!file.isEndOfLineNext())
+     * {
+     *     // do something
+     * }
+     * file.ignoreEndOfLines();
+     * @endcode
      */
     bool isEndOfLineNext()
     {

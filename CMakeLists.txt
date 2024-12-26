@@ -16,4 +16,4 @@ add_subdirectory(lib_tests)
 add_subdirectory(lib_benchmarks)
 
 # Projects that use the library
-add_subdirectory(aoc_2024)
+add_subdirectory(aoc)
