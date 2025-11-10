@@ -2,7 +2,7 @@
 
 #include "aoc/aoc.hpp"
 
-#include "moszir/vector.hpp"
+#include "moszir/moszir.hpp"
 
 namespace aoc::year2024::day25
 {

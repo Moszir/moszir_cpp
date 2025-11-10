@@ -1,6 +1,5 @@
 #pragma once
 
-#include "string.hpp"
 #include "unordered_map.hpp"
 
 #include <algorithm>
@@ -13,6 +12,9 @@
 
 namespace moszir
 {
+
+// Forward declaration to break circular dependency
+class String;
 
 template <typename ValueType>
 class Vector : public std::vector<ValueType>
@@ -61,9 +63,8 @@ public:
     /**
      * @brief Slices the vector.
      *
-     * @param beginIndex The index of the first element to include.
-     * @param endIndex The index after the last element to include.
-     *
+     * @param[in] beginIndex The index of the first element to include.
+     * @param[in] endIndex The index after the last element to include.
      * @return The sliced vector.
      *
      * @note If `beginIndex` is greater than or equal to `endIndex`, an empty vector is returned.
@@ -134,6 +135,11 @@ public:
 
     #pragma region Algorithms
 
+    bool all_of(auto&& predicate) const
+    {
+        return std::ranges::all_of(BaseClass::begin(), BaseClass::end(), predicate);
+    }
+
     auto count_if(auto&& predicate) const
     {
         return std::ranges::count_if(BaseClass::begin(), BaseClass::end(), predicate);
@@ -181,22 +187,6 @@ public:
     std::ostream& print(const char separator = ',', std::ostream& out = std::cout) const
     {
         return print(std::string(1, separator), out);
-    }
-
-    [[nodiscard]]
-    String toString(const std::string& separator = ", ") const
-    {
-        std::stringstream ss;
-        print(separator, ss);
-        return String(ss.str());
-    }
-
-    [[nodiscard]]
-    String toString(const char separator) const
-    {
-        std::stringstream ss;
-        print(separator, ss);
-        return String(ss.str());
     }
     #pragma endregion
 

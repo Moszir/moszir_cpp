@@ -2,10 +2,13 @@
 
 #include "aoc/aoc.hpp"
 
+#include "moszir/conversions.hpp"
+#include "moszir/ifstream.hpp"
+#include "moszir/vector.hpp"
+
 #include <array>
 #include <numeric>
 
-#include "moszir/vector.hpp"
 
 namespace aoc::year2024::day25
 {

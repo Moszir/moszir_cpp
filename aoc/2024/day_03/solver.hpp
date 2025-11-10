@@ -1,7 +1,5 @@
 #pragma once
 
-#include "moszir/vector.hpp"
-
 #include "aoc/aoc.hpp"
 
 #include <regex>

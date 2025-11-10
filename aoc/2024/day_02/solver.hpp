@@ -1,9 +1,8 @@
 #pragma once
 
+#include "aoc/aoc.hpp"
 #include "moszir/ifstream.hpp"
 #include "moszir/vector.hpp"
-
-#include "aoc/aoc.hpp"
 
 #include <iostream>
 #include <ranges>

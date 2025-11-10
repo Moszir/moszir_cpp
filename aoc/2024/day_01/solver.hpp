@@ -1,7 +1,5 @@
 #pragma once
 
-#include "moszir/vector.hpp"
-
 #include "aoc/aoc.hpp"
 
 namespace aoc::year2024::day01

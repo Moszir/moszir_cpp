@@ -1,6 +1,9 @@
 #pragma once
 
 #include "aoc/aoc.hpp"
+
+#include "moszir/conversions.hpp"
+#include "moszir/ifstream.hpp"
 #include "moszir/vector.hpp"
 
 
@@ -29,7 +32,7 @@ public:
     std::string solvePart1() override
     {
         simulate();
-        return output_.toString(',');
+        return toString(output_, ',');
     }
 
     std::string solvePart2() override

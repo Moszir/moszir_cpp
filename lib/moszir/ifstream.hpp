@@ -1,11 +1,12 @@
 #pragma once
 
-#include "moszir/string.hpp"
-
+#include "string.hpp"
 #include <fstream>
 
 namespace moszir
 {
+
+class String;
 
 /**
  * @brief An <c>std::ifstream</c> with additional functionality.
@@ -22,6 +23,13 @@ public:
     String readFile()
     {
         return {std::istreambuf_iterator(*this), std::istreambuf_iterator<char>()};
+    }
+
+    String readLine()
+    {
+        String line;
+        std::getline(*this, line);
+        return line;
     }
 
     /**
