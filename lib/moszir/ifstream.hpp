@@ -1,6 +1,7 @@
 #pragma once
 
 #include "string.hpp"
+#include "vector.hpp"
 #include <fstream>
 
 namespace moszir
@@ -32,6 +33,29 @@ public:
         return line;
     }
 
+    template <typename T>
+    Vector<T> readVector(const String& separator = ",")
+    {
+        Vector<T> result;
+        while (good())
+        {
+            *this >> result;
+            if (!good())
+            {
+                break;
+            }
+            for (size_t i = 0; i < separator.size(); ++i)
+            {
+                if (peek() != separator[i])
+                {
+                    return result;
+                }
+                ignore();
+            }
+        }
+        return result;
+    }
+
     /**
      * @brief Returns whether the next character in the stream is an end of line character without consuming it.
      *
@@ -51,6 +75,12 @@ public:
     bool isEndOfLineNext()
     {
         return peek() == '\n' || peek() == '\r' || peek() == EOF;
+    }
+
+    void ignoreEndOfLine()
+    {
+        if (peek() == '\r') ignore();
+        if (peek() == '\n') ignore();
     }
 
     /**

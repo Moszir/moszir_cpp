@@ -140,9 +140,22 @@ public:
         return std::ranges::all_of(BaseClass::begin(), BaseClass::end(), predicate);
     }
 
+    bool any_of(auto&& predicate) const
+    {
+        return std::ranges::any_of(BaseClass::begin(), BaseClass::end(), predicate);
+    }
+
     auto count_if(auto&& predicate) const
     {
         return std::ranges::count_if(BaseClass::begin(), BaseClass::end(), predicate);
+    }
+
+    bool contains(const ValueType& value) const
+    {
+        return std::ranges::find(
+            BaseClass::begin(),
+            BaseClass::end(),
+            value) != BaseClass::end();
     }
 
     template<typename ReturnType>
@@ -165,6 +178,29 @@ public:
             BaseClass::begin(),
             BaseClass::end());
         return *this;
+    }
+
+    Vector& sort(auto&& comparator)
+    {
+        std::ranges::sort(
+            BaseClass::begin(),
+            BaseClass::end(),
+            comparator);
+        return *this;
+    }
+
+    Vector createSorted() const
+    {
+        Vector result = *this;
+        result.sort();
+        return result;
+    }
+
+    Vector createSorted(auto&& comparator) const
+    {
+        Vector result = *this;
+        result.sort(comparator);
+        return result;
     }
     #pragma endregion
 
