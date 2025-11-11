@@ -1,0 +1,1 @@
+add_moszir_gtest(conversions vector_to_string)

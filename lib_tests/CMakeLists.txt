@@ -5,4 +5,5 @@ function(add_moszir_gtest module submodule)
     gtest_discover_tests("${target}" PROPERTIES LABELS moszir)
 endfunction()
 
+add_subdirectory(conversions)
 add_subdirectory(vector)

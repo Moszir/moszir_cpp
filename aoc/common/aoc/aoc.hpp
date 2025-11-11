@@ -32,7 +32,20 @@ public:
         parseFile(path.string());
     }
 
+    /**
+     * @brief Solves part 1 of the puzzle.
+     *
+     * @return
+     * The solution as a string.
+     */
     virtual std::string solvePart1() = 0;
+
+    /**
+     * @brief Solves part 2 of the puzzle.
+     *
+     * @return
+     * The solution as a string.
+     */
     virtual std::string solvePart2() = 0;
 };
 
